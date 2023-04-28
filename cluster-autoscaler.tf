@@ -1,8 +1,8 @@
-module "lb_controller" {
-  source  = "lablabs/eks-load-balancer-controller/aws"
-  version = ">= 1.2.0"
+module "eks_cluster_autoscaler" {
+  source  = "lablabs/eks-cluster-autoscaler/aws"
+  version = ">= 2.1.0"
 
-  enabled           = var.deploy_loadbalancer_controller
+  enabled           = var.deploy_cluster_autoscaler
   argo_enabled      = false
   argo_helm_enabled = false
 

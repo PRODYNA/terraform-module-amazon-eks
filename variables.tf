@@ -100,6 +100,12 @@ variable "deploy_ebs_csi_driver" {
   default     = true
 }
 
+variable "deploy_cluster_autoscaler" {
+  description = "Deploy the cluster autoscaler to autoscale nodes. https://github.com/lablabs/terraform-aws-eks-cluster-autoscaler"
+  type        = bool
+  default     = true
+}
+
 locals {
   cluster_name = "${local.prefix}-${var.use_case}"
   prefix_env   = terraform.workspace == "default" ? var.environment : terraform.workspace

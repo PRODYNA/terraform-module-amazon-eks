@@ -1,4 +1,4 @@
-module "eks-ebs-csi-driver" {
+module "eks_ebs_csi_driver" {
   source  = "lablabs/eks-ebs-csi-driver/aws"
   version = ">= 0.1.0"
 
