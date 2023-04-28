@@ -94,6 +94,12 @@ variable "deploy_loadbalancer_controller" {
   default     = true
 }
 
+variable "deploy_ebs_csi_driver" {
+  description = "Deploy the EBS CSI driver to auto. provision EBS drives for PVC's. https://github.com/lablabs/terraform-aws-eks-ebs-csi-driver"
+  type        = bool
+  default     = true
+}
+
 locals {
   cluster_name = "${local.prefix}-${var.use_case}"
   prefix_env   = terraform.workspace == "default" ? var.environment : terraform.workspace
