@@ -101,6 +101,4 @@ module "eks" {
   manage_aws_auth_configmap = var.manage_aws_auth_configmap
   aws_auth_roles            = var.aws_auth_roles
   aws_auth_users            = var.aws_auth_users
-
-  cluster_addons = var.cluster_addons
 }

@@ -83,27 +83,32 @@ variable "cluster_enabled_log_types" {
 }
 
 variable "cluster_addons" {
-  description = "Map of cluster addon configurations to enable for the cluster. Addon name can be the map keys or set with `name`"
+  description = "EKS and K8s addons to enable."
+  type        = map(bool)
+  default = {
+    enable_amazon_eks_aws_ebs_csi_driver = true
+    enable_aws_load_balancer_controller  = true
+    enable_cluster_autoscaler            = true
+    enable_metrics_server                = true
+  }
+}
+
+variable "aws_load_balancer_controller_helm_config" {
+  description = "AWS Load Balancer Controller Helm Chart config"
   type        = any
   default     = {}
 }
 
-variable "deploy_loadbalancer_controller" {
-  description = "Deploy the aws-load-balancer-controller. https://github.com/kubernetes-sigs/aws-load-balancer-controller"
-  type        = bool
-  default     = true
+variable "cluster_autoscaler_helm_config" {
+  description = "Cluster Autoscaler Helm Chart config"
+  type        = any
+  default     = {}
 }
 
-variable "deploy_ebs_csi_driver" {
-  description = "Deploy the EBS CSI driver to auto. provision EBS drives for PVC's. https://github.com/lablabs/terraform-aws-eks-ebs-csi-driver"
-  type        = bool
-  default     = true
-}
-
-variable "deploy_cluster_autoscaler" {
-  description = "Deploy the cluster autoscaler to autoscale nodes. https://github.com/lablabs/terraform-aws-eks-cluster-autoscaler"
-  type        = bool
-  default     = true
+variable "metrics_server_helm_config" {
+  description = "Metrics Server Helm Chart config"
+  type        = any
+  default     = {}
 }
 
 locals {
