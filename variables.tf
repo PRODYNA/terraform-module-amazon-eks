@@ -90,6 +90,7 @@ variable "cluster_addons" {
     enable_aws_load_balancer_controller  = true
     enable_cluster_autoscaler            = true
     enable_metrics_server                = true
+    enable_external_dns                  = true
   }
 }
 
@@ -109,6 +110,24 @@ variable "metrics_server_helm_config" {
   description = "Metrics Server Helm Chart config"
   type        = any
   default     = {}
+}
+
+variable "external_dns_helm_config" {
+  description = "External DNS Helm Chart config"
+  type        = any
+  default     = {}
+}
+
+variable "external_dns_route53_zone_arns" {
+  description = "List of Route53 zones ARNs which external-dns will have access to create/manage records"
+  type        = list(string)
+  default     = []
+}
+
+variable "eks_cluster_domain" {
+  description = "The domain for the EKS cluster"
+  type        = string
+  default     = ""
 }
 
 locals {
