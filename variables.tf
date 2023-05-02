@@ -124,6 +124,12 @@ variable "external_dns_route53_zone_arns" {
   default     = []
 }
 
+variable "external_dns_route53_zone_id" {
+  description = "Route53 zone id for the hosted zone used to for the EKS cluster."
+  type        = string
+  default     = null
+}
+
 variable "eks_cluster_domain" {
   description = "The domain for the EKS cluster"
   type        = string

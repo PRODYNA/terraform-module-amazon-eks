@@ -22,7 +22,13 @@ output "eks_managed_node_groups" {
   description = "Outputs from node groups"
   value       = module.eks.eks_managed_node_groups
 }
+
 output "aws_auth_configmap_yaml" {
   description = "A kubernetes configuration to authenticate to this EKS cluster."
   value       = module.eks.aws_auth_configmap_yaml
+}
+
+output "cluster_certificate_arn" {
+  description = "ARN of the cluster ACM certificate used for TLS."
+  value       = join("", aws_acm_certificate.this.*.arn)
 }
