@@ -1,4 +1,5 @@
 # TODO EBS CSI driver with GP3
+# TODO EBS CSI takes long for the deployment
 #tfsec:ignore:aws-iam-no-policy-wildcards
 module "eks_blueprints_kubernetes_addons" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons"
@@ -30,14 +31,15 @@ resource "aws_acm_certificate" "this" {
   validation_method = "DNS"
 }
 
+
 resource "aws_route53_record" "this" {
-  for_each = {
-    for dvo in try(aws_acm_certificate.this[0].domain_validation_options, []) : dvo.domain_name => {
+  for_each = local.enable_external_dns && aws_acm_certificate.this != null && aws_acm_certificate.this[0].domain_validation_options != null ? {
+    for dvo in aws_acm_certificate.this[0].domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
       record = dvo.resource_record_value
       type   = dvo.resource_record_type
     }
-  }
+  } : {}
 
   name    = each.value.name
   type    = each.value.type
