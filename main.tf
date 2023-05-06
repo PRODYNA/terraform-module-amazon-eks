@@ -122,7 +122,6 @@ module "eks" {
   //workers_additional_policies                        = [aws_iam_policy.ebs.arn]
   node_security_group_additional_rules = var.node_security_group_additional_rules
 
-  # TODO openid_connect_audiences ??
   manage_aws_auth_configmap = var.manage_aws_auth_configmap
   aws_auth_roles            = var.aws_auth_roles
   aws_auth_users            = var.aws_auth_users

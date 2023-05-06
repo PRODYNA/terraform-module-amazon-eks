@@ -1,5 +1,3 @@
-# TODO EBS CSI driver with GP3
-# TODO EBS CSI takes long for the deployment
 #tfsec:ignore:aws-iam-no-policy-wildcards
 module "eks_blueprints_kubernetes_addons" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons"
@@ -23,6 +21,59 @@ module "eks_blueprints_kubernetes_addons" {
   external_dns_route53_zone_arns           = var.external_dns_route53_zone_arns
   eks_cluster_domain                       = var.eks_cluster_domain
 }
+
+#######
+# Storage classes
+#######
+
+resource "kubernetes_annotations" "gp2" {
+  api_version = "storage.k8s.io/v1"
+  kind        = "StorageClass"
+  force       = "true"
+
+  metadata {
+    name = "gp2"
+  }
+
+  annotations = {
+    # Modify annotations to remove gp2 as default storage class still reatain the class
+    "storageclass.kubernetes.io/is-default-class" = "false"
+  }
+
+  depends_on = [
+    module.eks_blueprints_kubernetes_addons
+  ]
+}
+
+resource "kubernetes_storage_class_v1" "gp3" {
+  metadata {
+    name = "gp3"
+
+    annotations = {
+      # Annotation to set gp3 as default storage class
+      "storageclass.kubernetes.io/is-default-class" = "true"
+    }
+  }
+
+  storage_provisioner    = "ebs.csi.aws.com"
+  allow_volume_expansion = true
+  reclaim_policy         = "Delete"
+  volume_binding_mode    = "WaitForFirstConsumer"
+
+  parameters = {
+    encrypted = true
+    fsType    = "ext4"
+    type      = "gp3"
+  }
+
+  depends_on = [
+    module.eks_blueprints_kubernetes_addons
+  ]
+}
+
+#######
+# HTTPS with external DNS
+#######
 
 resource "aws_acm_certificate" "this" {
   count = local.enable_external_dns ? 1 : 0
