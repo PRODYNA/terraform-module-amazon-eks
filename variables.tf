@@ -137,8 +137,8 @@ variable "eks_cluster_domain" {
 }
 
 locals {
-  cluster_name = "${local.prefix}-${var.use_case}"
-  prefix_env   = terraform.workspace == "default" ? var.environment : terraform.workspace
-  prefix       = "${var.project}-${local.prefix_env}"
+  cluster_name        = "${local.prefix}-${var.use_case}"
+  prefix_env          = terraform.workspace == "default" ? var.environment : terraform.workspace
+  prefix              = "${var.project}-${local.prefix_env}"
   enable_external_dns = lookup(var.cluster_addons, "enable_external_dns", true) && var.eks_cluster_domain != "" && length(var.external_dns_route53_zone_arns) > 0 && var.external_dns_route53_zone_id != null
 }

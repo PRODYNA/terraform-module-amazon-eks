@@ -1,7 +1,32 @@
 terraform {
   required_version = ">= 1.0"
 
-  # TODO required providers
+  required_providers {
+    kubectl = {
+      version = ">= 1.14.0"
+      source  = "registry.terraform.io/gavinbunney/kubectl"
+    }
+    aws = {
+      version = ">= 4.66.1"
+      source  = "hashicorp/aws"
+    }
+    cloudinit = {
+      version = ">= 2.3.2"
+      source  = "hashicorp/cloudinit"
+    }
+    helm = {
+      version = ">= 2.9.0"
+      source  = "hashicorp/helm"
+    }
+    kubernetes = {
+      version = ">= 2.20.0"
+      source  = "hashicorp/kubernetes"
+    }
+    null = {
+      version = ">= 3.2.1"
+      source  = "hashicorp/null"
+    }
+  }
 }
 
 data "aws_caller_identity" "current" {}
