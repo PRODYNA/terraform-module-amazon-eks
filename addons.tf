@@ -33,7 +33,7 @@ resource "aws_acm_certificate" "this" {
 
 
 resource "aws_route53_record" "this" {
-  for_each = local.enable_external_dns && aws_acm_certificate.this != null && aws_acm_certificate.this[0].domain_validation_options != null ? {
+  for_each = local.enable_external_dns && aws_acm_certificate.this != null ? {
     for dvo in aws_acm_certificate.this[0].domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
       record = dvo.resource_record_value
