@@ -32,3 +32,8 @@ output "cluster_certificate_arn" {
   description = "ARN of the cluster ACM certificate used for TLS."
   value       = join("", aws_acm_certificate.this.*.arn)
 }
+
+output "worker_security_group_id" {
+  description = "The ID of the security group used by the worker nodes."
+  value       = module.eks.node_security_group_id
+}
