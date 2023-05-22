@@ -87,29 +87,31 @@ variable "cluster_addons" {
   type        = map(bool)
   default = {
     enable_amazon_eks_aws_ebs_csi_driver = true
-    enable_aws_load_balancer_controller  = true
-    enable_cluster_autoscaler            = true
-    enable_metrics_server                = true
-    enable_external_dns                  = true
+    enable_amazon_eks_coredns            = true
+    enable_amazon_eks_kube_proxy         = true
+    enable_amazon_eks_vpc_cni            = true
+
+    enable_aws_load_balancer_controller = true
+    enable_cluster_autoscaler           = true
+    enable_metrics_server               = true
+    enable_external_dns                 = true
   }
 }
 
-variable "aws_load_balancer_controller_helm_config" {
-  description = "AWS Load Balancer Controller Helm Chart config"
-  type        = any
-  default     = {}
-}
+variable "cluster_addon_configs" {
+  description = "Configurations for the EKS and K8s addons (see 'cluster_addons')"
+  type        = map(any)
+  default = {
+    amazon_eks_aws_ebs_csi_driver_config = {}
+    amazon_eks_coredns_config            = {}
+    amazon_eks_kube_proxy_config         = {}
+    amazon_eks_vpc_cni_config            = {}
 
-variable "cluster_autoscaler_helm_config" {
-  description = "Cluster Autoscaler Helm Chart config"
-  type        = any
-  default     = {}
-}
-
-variable "metrics_server_helm_config" {
-  description = "Metrics Server Helm Chart config"
-  type        = any
-  default     = {}
+    aws_load_balancer_controller_helm_config = {}
+    cluster_autoscaler_helm_config           = {}
+    metrics_server_helm_config               = {}
+    external_dns_helm_config                 = {}
+  }
 }
 
 variable "external_dns_helm_config" {
