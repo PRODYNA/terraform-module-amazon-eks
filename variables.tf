@@ -98,20 +98,46 @@ variable "cluster_addons" {
   }
 }
 
-variable "cluster_addon_configs" {
-  description = "Configurations for the EKS and K8s addons (see 'cluster_addons')"
-  type        = map(any)
-  default = {
-    amazon_eks_aws_ebs_csi_driver_config = {}
-    amazon_eks_coredns_config            = {}
-    amazon_eks_kube_proxy_config         = {}
-    amazon_eks_vpc_cni_config            = {}
+variable "aws_load_balancer_controller_helm_config" {
+  description = "AWS Load Balancer Controller Helm Chart config"
+  type        = any
+  default     = {}
+}
 
-    aws_load_balancer_controller_helm_config = {}
-    cluster_autoscaler_helm_config           = {}
-    metrics_server_helm_config               = {}
-    external_dns_helm_config                 = {}
-  }
+variable "cluster_autoscaler_helm_config" {
+  description = "Cluster Autoscaler Helm Chart config"
+  type        = any
+  default     = {}
+}
+
+variable "metrics_server_helm_config" {
+  description = "Metrics Server Helm Chart config"
+  type        = any
+  default     = {}
+}
+
+variable "amazon_eks_vpc_cni_config" {
+  description = "EKS VPC CNI config"
+  type        = any
+  default     = {}
+}
+
+variable "amazon_eks_kube_proxy_config" {
+  description = "EKS Kube-Proxy config"
+  type        = any
+  default     = {}
+}
+
+variable "amazon_eks_coredns_config" {
+  description = "External DNS Helm Chart config"
+  type        = any
+  default     = {}
+}
+
+variable "amazon_eks_aws_ebs_csi_driver_config" {
+  description = "EKS EBS CSI config"
+  type        = any
+  default     = {}
 }
 
 variable "external_dns_helm_config" {
@@ -138,9 +164,28 @@ variable "eks_cluster_domain" {
   default     = ""
 }
 
+variable "enable_argocd" {
+  description = "Enable and manage Kubernetes addons by ArgoCD."
+  type        = bool
+  default     = false
+}
+
+variable "argocd_helm_config" {
+  description = "Configuration for the ArgoCD Helm chart."
+  type        = any
+  default     = {}
+}
+
 locals {
   cluster_name        = "${local.prefix}-${var.use_case}"
   prefix_env          = terraform.workspace == "default" ? var.environment : terraform.workspace
   prefix              = "${var.project}-${local.prefix_env}"
   enable_external_dns = lookup(var.cluster_addons, "enable_external_dns", true) && var.eks_cluster_domain != "" && length(var.external_dns_route53_zone_arns) > 0 && var.external_dns_route53_zone_id != null
+  argocd_applications = var.enable_argocd ? {
+    addons = {
+      path               = "chart"
+      repo_url           = "https://github.com/aws-samples/eks-blueprints-add-ons.git"
+      add_on_application = true
+    }
+  } : {}
 }
